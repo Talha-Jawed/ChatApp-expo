@@ -40,50 +40,43 @@ class LogIn extends React.Component {
 
     async logInGoogle() {
         console.log('click**');
-
-        // try {
         const result = await Expo.Google.logInAsync({
             androidClientId: '309186469900-9vohoai2n23qf754at258g0s4k2fv6to.apps.googleusercontent.com',
             iosClientId: '309186469900-14cvp9sp73j94jafutpnddvtibftg3ov.apps.googleusercontent.com',
             scopes: ['profile', 'email'],
         });
 
-        // var credential = firebase.auth.GoogleAuthProvider.credential(result.accessToken)
         if (result.type === 'success') {
-            this.props.navigation.navigate('Home',  result )
+            // this.props.navigation.navigate('Home', result)
             console.log('Result-->', result);
 
             this.props.profilePic = result.photoUrl
             this.props.profileName = result.givenName
-            // firebase.auth().signInAndRetrieveDataWithCredential(credential).then((success) => {
-            //     console.log(success, 'success******');
-            //     var currentUID = success.user.uid
-            //     var obj = {
-            //         Name: success.additionalUserInfo.profile.name,
-            //         UID: success.user.uid,
-            //         Photo: success.user.photoURL,
-            //         Token: token
-            //     }
-            //     firebase.database().ref('/UserData/' + currentUID).update(obj);
-
-            // })
-            //     .catch((error) => {
-            //         console.log(error, '********');
-            //         alert(error)
-            //     })
-
+            const { idToken, accessToken } = result;
+            const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+            firebase
+                .auth()
+                .signInAndRetrieveDataWithCredential(credential)
+                .then(success => {
+                    // user res, create your user, do whatever you want
+                    var currentUID = success.user.uid
+                    var obj = {
+                        Name: success.user.displayName,
+                        UID: success.user.uid,
+                        Photo: success.user.photoURL,
+                        Token: accessToken
+                    }
+                    firebase.database().ref('/UserData/' + currentUID).update(obj);
+                })
+                .catch(error => {
+                    console.log("firebase cred err:", error);
+                });
             return result.accessToken;
 
         } else {
             console.log('/////');
-
             return { cancelled: true };
         }
-        // } catch (e) {
-        //     console.log('dcdcdcds');
-
-        //     return { error: true };
-        // }
     }
 
     static navigationOptions = { header: null }
