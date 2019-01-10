@@ -8,7 +8,9 @@ const INITIAL_STATE = {
     TOKENREQUEST: null,
     PROFILEPIC: null,
     PROFILENAME: null,
-    ALLUSER: null
+    ALLUSER: null,
+    MESSAGES: null,
+    COND: null
 }
 
 export default (states = INITIAL_STATE, action) => {
@@ -52,6 +54,16 @@ export default (states = INITIAL_STATE, action) => {
             return ({
                 ...states,
                 PROFILENAME: action.payload
+            })
+        case 'MESSAGES':
+            return ({
+                ...states,
+                MESSAGES: action.payload
+            })
+            case 'COND':
+            return ({
+                ...states,
+                COND: action.payload
             })
         default:
             return states;

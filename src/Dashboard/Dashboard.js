@@ -7,6 +7,9 @@ import { connect } from 'react-redux'
 import Expo from 'expo';
 import AppHeader from '../Component/Header/Header'
 import { ScrollView } from 'react-native-gesture-handler';
+import SettingsList from 'react-native-settings-list';
+
+
 
 async function getToken() {
 
@@ -40,23 +43,35 @@ class Home extends React.Component {
             loading: false,
             noti: '',
             alluser: null,
-            message: ''
+            switchValue: false,
+            message: '',
+            msg: null
 
         }
-    }
+        this.onValueChange = this.onValueChange.bind(this);
 
+    }
+    onValueChange(value) {
+        this.setState({ switchValue: value });
+    }
     componentWillReceiveProps(props) {
         const { expoToken } = this.state
-        const currentUID = props.UID;
+        const msg = props.msg
+        if (msg) {
+            setTimeout(() => {
+                this.setState({ msg })
+            }, 100);
+        }
+
         const { alluser } = props;
-        if(alluser){
+        if (alluser) {
             setTimeout(() => {
                 this.setState({ alluser })
             }, 100);
         }
         // console.log('Alluser', alluser)
-        console.log('*****',this.props.CurrentUser);
-        
+        console.log('*****', this.props.CurrentUser);
+
         if (props.CurrentUser) {
 
             // var obj = {
@@ -83,7 +98,7 @@ class Home extends React.Component {
         }
 
         const { alluser } = this.props;
-        if(alluser) {
+        if (alluser) {
             setTimeout(() => {
                 this.setState({ alluser })
             }, 100);
@@ -149,13 +164,19 @@ class Home extends React.Component {
 
     }
 
+    chat(user) {
+        // console.log(user, '**');
+        this.props.navigation.navigate('Chat', user)
+    }
 
     static navigationOptions = { header: null }
 
     render() {
-        const { mode, Name, profilePic, loading, noti, result, expoToken, message, alluser } = this.state;
-       console.log('all user***', alluser);
-       
+        const { mode, Name, profilePic, loading, noti, result, expoToken, msg, alluser } = this.state;
+        // console.log('all user***', alluser);
+        // console.log('msg=======', msg );
+
+
         return (
             <View>
                 <AppHeader LogOut={this.props.navigation} />
@@ -169,23 +190,37 @@ class Home extends React.Component {
                                 <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 30 }}>{'Name:' + Name}</Text>
                                 <Text style={{ marginTop: 30, fontSize: 24, fontWeight: 'bold', marginTop: 30 }}>{noti.user}</Text>
                                 {/* <TextInput placeholder={"Write..."} onChange={(e) => { this.setState({ message: e }) }} /> */}
-                                <TextInput
-                                    // style={styles.input}
-                                    onChangeText={(e) => this.setState({ message: e })}
-                                    value={message}
-                                    returnKeyType='done'
-                                    placeholder={'write...'}
-                                // placeholderTextColor='rgba(255,255,255,0.7)'
-
-                                />
+                                {<View style={{ backgroundColor: '#EFEFF4', flex: 1, width: 350 }}>
+                                    <View style={{ borderBottomWidth: 1, backgroundColor: '#f7f7f8', borderColor: '#c8c7cc' }}>
+                                        <Text style={{ alignSelf: 'center', marginTop: 30, marginBottom: 10, fontWeight: 'bold', fontSize: 16 }}>Chat App</Text>
+                                    </View></View>}
                                 {
                                     alluser && alluser.length ?
                                         alluser.map(item => {
-                                            return <Button
-                                                key={item.Name}
-                                                title={item.Name}
-                                                onPress={() => this.page(item.expoToken)}
-                                            />
+                                            console.log(item.Photo);
+
+                                            return <View style={{ width: 350 }} key={item.Name}>
+                                                <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
+                                                    <SettingsList.Header headerStyle={{ marginTop: 15 }} />
+                                                    <SettingsList.Item
+                                                        key={item.Name}
+                                                        // icon={
+                                                        //     <Image source={require('https://placeimg.com/140/140/any')} />
+                                                        // }
+                                                        // hasSwitch={true}
+                                                        // switchState={this.state.switchValue}
+                                                        // switchOnValueChange={this.onValueChange}
+                                                        hasNavArrow={true}
+                                                        title={item.Name}
+                                                        onPress={() => this.chat(user = item)}
+                                                    />
+                                                </SettingsList>
+                                            </View>
+                                            //  <Button
+                                            //     key={item.Name}
+                                            //     title={item.Name}
+                                            //     onPress={() => this.page(item.expoToken)}
+                                            // />
                                         })
                                         :
                                         null
@@ -245,6 +280,7 @@ function mapStateToProps(states) {
         UID: states.authReducers.UID,
         CurrentUser: states.authReducers.USER,
         alluser: states.authReducers.ALLUSER,
+        msg: states.authReducers.MESSAGES,
     })
 }
 

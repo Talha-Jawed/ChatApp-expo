@@ -5,6 +5,8 @@ const actionTypes = {
     ALLUSER: 'ALLUSER',
     CLINICS: "CLINICS",
     TOKENREQUEST: 'TOKENREQUEST',
+    MESSAGES: 'MESSAGES',
+    COND: 'COND'
 }
 
 export default actionTypes;

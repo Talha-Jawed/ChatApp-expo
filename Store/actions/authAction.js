@@ -91,5 +91,16 @@ export function current_User(currentUser) {
                 )
             }
         })
+        var messages = [];
+        var cond = false;
+        firebase.database().ref('messages').on('child_added', SnapShot => {
+            messages.push(SnapShot.val())
+            cond = !cond;
+            dispatch({ type: actionTypes.COND, payload: cond })
+            // console.log('msg==>', SnapShot.val())
+            dispatch(
+                { type: actionTypes.MESSAGES, payload: messages }
+            )
+        })
     }
 }

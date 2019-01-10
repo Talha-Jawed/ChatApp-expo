@@ -1,7 +1,7 @@
 import { createStackNavigator, createAppContainer, createDrawerNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import LogIn from '../src/Auth/Auth'
 import Home from '../src/Dashboard/Dashboard'
-import notifPage from '../src/Dashboard/NotifPage'
+import Chat from '../src/ChatBox/Chatbox'
 
 
 const StackNavigator = createStackNavigator({
@@ -11,9 +11,10 @@ const StackNavigator = createStackNavigator({
     Home: {
         screen: Home
     },
-    Page:{
-        screen: notifPage
+    Chat:{
+        screen: Chat
     }
+
 
 })
 const Navigation = createAppContainer(StackNavigator)
