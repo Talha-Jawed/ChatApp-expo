@@ -34,6 +34,29 @@ export function fb_Action(type, token) {
     }
 }
 
+// Google LogIn
+
+export function Google_Action(currentUID, obj) {
+    return dispatch => {
+        dispatch(
+            { type: actionTypes.UID, payload: currentUID }
+        )
+        dispatch(
+            { type: actionTypes.USER, payload: obj }
+        )
+        // var currentUID = success.user.uid
+        // var obj = {
+        //     Name: success.user.displayName,
+        //     UID: success.user.uid,
+        //     Photo: success.user.photoURL,
+        //     Token: accessToken
+        // }
+        // console.log(obj , currentUID);
+
+        // firebase.database().ref('/UserData/' + currentUID).update(obj);
+    }
+}
+
 
 // current User
 export function current_User(currentUser) {

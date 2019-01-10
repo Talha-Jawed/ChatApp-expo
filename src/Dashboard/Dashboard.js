@@ -49,9 +49,14 @@ class Home extends React.Component {
         const { expoToken } = this.state
         const currentUID = props.UID;
         const { alluser } = props;
-        this.setState({ alluser })
+        if(alluser){
+            setTimeout(() => {
+                this.setState({ alluser })
+            }, 100);
+        }
         // console.log('Alluser', alluser)
-
+        console.log('*****',this.props.CurrentUser);
+        
         if (props.CurrentUser) {
 
             // var obj = {
@@ -76,6 +81,27 @@ class Home extends React.Component {
             const { user } = this.props.navigation.state.params
             this.setState({ Name: user.name, profilePic: user.photoUrl, loading: true })
         }
+
+        const { alluser } = this.props;
+        if(alluser) {
+            setTimeout(() => {
+                this.setState({ alluser })
+            }, 100);
+        }
+
+        if (this.props.CurrentUser) {
+
+            // var obj = {
+            //     expoToken: expoToken
+            // }
+            // firebase.database().ref('/UserData/' + currentUID).update(obj);
+            this.setState({
+                Name: this.props.CurrentUser.Name,
+                profilePic: this.props.CurrentUser.Photo,
+                loading: true
+            })
+        }
+
     }
 
     componentWillUnmount() {
@@ -128,6 +154,8 @@ class Home extends React.Component {
 
     render() {
         const { mode, Name, profilePic, loading, noti, result, expoToken, message, alluser } = this.state;
+       console.log('all user***', alluser);
+       
         return (
             <View>
                 <AppHeader LogOut={this.props.navigation} />

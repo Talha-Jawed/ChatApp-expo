@@ -3,7 +3,7 @@ import { View, ScrollView, Text, TextInput, StyleSheet, Button, TouchableOpacity
 import firebase from '../../Config/Firebase'
 import { StackActions, NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux'
-import { current_User, fb_Action } from '../../Store/actions/authAction'
+import { current_User, fb_Action, Google_Action } from '../../Store/actions/authAction'
 // import Expo from 'expo'
 
 class LogIn extends React.Component {
@@ -59,6 +59,7 @@ class LogIn extends React.Component {
                 .signInAndRetrieveDataWithCredential(credential)
                 .then(success => {
                     // user res, create your user, do whatever you want
+                    console.log('success==>', success);
                     var currentUID = success.user.uid
                     var obj = {
                         Name: success.user.displayName,
@@ -67,6 +68,8 @@ class LogIn extends React.Component {
                         Token: accessToken
                     }
                     firebase.database().ref('/UserData/' + currentUID).update(obj);
+                    this.props.Google_auth(currentUID, obj)
+                    this.props.user(currentUID)
                 })
                 .catch(error => {
                     console.log("firebase cred err:", error);
@@ -136,6 +139,9 @@ function mapDispatchToProps(dispatch) {
         },
         fb_User: (type, token) => {
             dispatch(fb_Action(type, token))
+        },
+        Google_auth: (currentUID, obj) => {
+            dispatch(Google_Action(currentUID, obj))
         },
     })
 }
